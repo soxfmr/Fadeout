@@ -193,9 +193,15 @@ function Add-FadeoutModulePath {
     )
 
     $PSModulePath = $env:PSModulePath
-    $PSModulePath += ";{0}" -f $installPath
-    Set-Item -Path env:\PSModulePath -Value $PSModulePath | Out-Null 
-    [System.Environment]::SetEnvironmentVariable("PSModulePath", $PSModulePath, [System.EnvironmentVariableTarget]::Machine)
+    if ($PSModulePath -eq $null) {
+        $PSModulePath = ""
+    }
+
+    if (-not ($PSModulePathxi -Contains $installPath)) {
+        $PSModulePath += ";{0}" -f $installPath
+        Set-Item -Path env:\PSModulePath -Value $PSModulePath | Out-Null 
+        [System.Environment]::SetEnvironmentVariable("PSModulePath", $PSModulePath, [System.EnvironmentVariableTarget]::Machine)
+    }
  
     Show-LoggingMessage -Message "Added the installed path {$installPath} to `$PSModulePath variable." -Level Success
 }
@@ -206,9 +212,12 @@ function Remove-FadeoutModulePath {
         [string] $installPath
     )
 
-    $PSModulePath = $env:PSModulePath.Replace($installPath, '')
-    Set-Item -Path env:\PSModulePath -Value $PSModulePath | Out-Null 
-    [System.Environment]::SetEnvironmentVariable("PSModulePath", $PSModulePath, [System.EnvironmentVariableTarget]::Machine)
+    $PSModulePath = $env:PSModulePath
+    if (($PSModulePath -ne $null) -and ($PSModulePath -Contains $installPath)) {
+        $PSModulePath = $PSModulePath.Replace($installPath, '')
+        Set-Item -Path env:\PSModulePath -Value $PSModulePath | Out-Null 
+        [System.Environment]::SetEnvironmentVariable("PSModulePath", $PSModulePath, [System.EnvironmentVariableTarget]::Machine)
+    }
  
     Show-LoggingMessage -Message "The path {$installPath} has been deleted from `$PSModulePath variable." -Level Success
 }
