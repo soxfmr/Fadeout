@@ -15,3 +15,6 @@ function Stop-Fadeout {
 
     Stop-ScheduledTask -TaskName $taskName -AsJob
 }
+
+Export-ModuleMember -Function Start-Fadeout, Stop-Fadeout
+

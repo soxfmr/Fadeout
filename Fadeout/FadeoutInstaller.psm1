@@ -1,6 +1,6 @@
 $_defaultFadeoutTaskName = "Fadeout"
 $_defaultFadeoutTaskActionExec = "powershell"
-$_defaultFadeoutTaskActionArguments = '-WindowStyle Hidden -Command "Import-Module ./Fadeout/Fadeout.psd1; Mount-Fadeout'
+$_defaultFadeoutTaskActionArguments = '-WindowStyle Hidden -Command "Mount-Fadeout"'
 $_defaultFadeoutLockFile = "Fadeout.Lock"
 $_defaultFadeoutDownloadURLFileMappings = [ordered] @{
     "https://raw.githubusercontent.com/soxfmr/Fadeout/master/config.xml" = "config.xml"
