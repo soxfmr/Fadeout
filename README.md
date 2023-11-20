@@ -1,8 +1,13 @@
 Fadeout
 ===
 
-A Simple PowerShell module to hide the idle mouse cursor automatically, it's binary free 🍻!
+<p align="left">
+  <a href="https://skillicons.dev">
+    <img src="https://skillicons.dev/icons?i=powershell" />
+  </a>
+</p>
 
+A Simple PowerShell module to hide the idle mouse cursor automatically, it's binary free 🍻!
 
 Table of Contents
 -----------------
