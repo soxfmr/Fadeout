@@ -33,7 +33,7 @@ Fadeout solves this problem by registering a new scheduled task to activate Fade
 
 ```powershell
 $InstallPath = "C:\Fadeout" # change the install path
-iex '((New-Object System.Net.WebClient).DownloadString("https://raw.githubusercontent.com/soxfmr/Fadeout/master/Fadeout/FadeoutInstaller.psm1")); Install-Fadeout -InstallPath $InstallPath'
+iex '$response = Invoke-WebRequest -Uri "https://raw.githubusercontent.com/soxfmr/Fadeout/master/Fadeout/FadeoutInstaller.psm1"; $moduleBlock = [ScriptBlock]::Create($response.Content); New-Module -ScriptBlock $moduleBlock | Import-Module; Install-Fadeout -InstallPath $InstallPath -HttpProxy $Proxy'
 ```
 
 If your internal network requires proxy to access the Internet, you could specify the proxy address argument being used during the installation:
@@ -41,7 +41,7 @@ If your internal network requires proxy to access the Internet, you could specif
 ```powershell
 $InstallPath = "C:\Fadeout"          # change the install path
 $Proxy = "http://127.0.0.1:1080"     # Only HTTP / HTTPS proxy is supported
-iex '(($response = Invoke-WebRequest -Uri "https://raw.githubusercontent.com/soxfmr/Fadeout/master/Fadeout/FadeoutInstaller.psm1" -Proxy $Proxy -PassThru; $response.Content)); Install-Fadeout -InstallPath $InstallPath -HttpProxy $Proxy'
+iex '$response = Invoke-WebRequest -Uri "https://raw.githubusercontent.com/soxfmr/Fadeout/master/Fadeout/FadeoutInstaller.psm1" -Proxy $Proxy; $moduleBlock = [ScriptBlock]::Create($response.Content); New-Module -ScriptBlock $moduleBlock | Import-Module; Install-Fadeout -InstallPath $InstallPath -HttpProxy $Proxy'
 ```
 
 Or provide a proxy credential if authentication is needed:
@@ -50,7 +50,7 @@ Or provide a proxy credential if authentication is needed:
 $InstallPath = "C:\Fadeout"          # change the install path
 $Proxy = "http://127.0.0.1:1080"     # Only HTTP / HTTPS proxy is supported
 $ProxyCred = New-Object System.Management.Automation.PSCredential -ArgumentList "proxy-user", (ConvertTo-SecureString "p@ssw0rd" -AsPlainText -Force)
-IEX '(($response = Invoke-WebRequest -Uri "https://raw.githubusercontent.com/soxfmr/Fadeout/master/Fadeout/FadeoutInstaller.psm1" -Proxy $Proxy -ProxyCredential $ProxyCred -PassThru; $response.Content)); Install-Fadeout -InstallPath $InstallPath -HttpProxy -ProxyCredential $ProxyCred'
+IEX '$response = Invoke-WebRequest -Uri "https://raw.githubusercontent.com/soxfmr/Fadeout/master/Fadeout/FadeoutInstaller.psm1" -Proxy $Proxy -ProxyCredential $ProxyCred; $moduleBlock = [ScriptBlock]::Create($response.Content); New-Module -ScriptBlock $moduleBlock | Import-Module; Install-Fadeout -InstallPath $InstallPath -HttpProxy -ProxyCredential $ProxyCred'
 ```
 
 Run Fadeout
