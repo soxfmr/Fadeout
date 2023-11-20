@@ -358,11 +358,24 @@ function Protect-FadeoutInstalledFiles {
     .Parameter InstallPath
     The target directory that Fadeout is settle to.
 
+    .Parameter HttpProxy 
+    The proxy address used to download the install files.
+
+    .Parameter ProxyCredential
+    The proxy credential used to authenticate the user of the proxy server. 
+
     .Example
     Start-Fadeout
 
     .Example
     Start-FadeoutInstaller -InstallPath "C:\\Fadeout"
+
+    .Example
+    Start-FadeoutInstaller -InstallPath "C:\\Fadeout" -HttpProxy "http://127.0.0.1:1080"
+
+    .Example
+    $ProxyCred = New-Object System.Management.Automation.PSCredential -ArgumentList "proxy-user", (ConvertTo-SecureString "p@ssw0rd" -AsPlainText -Force)
+    Start-FadeoutInstaller -InstallPath "C:\\Fadeout" -HttpProxy "http://127.0.0.1:1080" -ProxyCredential $ProxyCred
 #>
 function Install-Fadeout {
     param(
