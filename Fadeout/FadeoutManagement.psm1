@@ -5,7 +5,7 @@ function Start-Fadeout {
         $taskName = $_defaultFadeoutTaskName
     )
 
-    Start-ScheduledTask -TaskName $taskName -AsJob
+    Start-ScheduledTask -TaskName $taskName
 }
 
 function Stop-Fadeout {
@@ -13,7 +13,7 @@ function Stop-Fadeout {
         $taskName = $_defaultFadeoutTaskName
     )
 
-    Stop-ScheduledTask -TaskName $taskName -AsJob
+    Stop-ScheduledTask -TaskName $taskName
 }
 
 Export-ModuleMember -Function Start-Fadeout, Stop-Fadeout
