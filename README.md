@@ -14,6 +14,7 @@ Table of Contents
 
 * [Installation](#installation)
     * [Using Fadeout Installer](#using-fadeout-installer)
+    * [Using git](#using-git)
 * [Run Fadeout](#run-fadeout)
 * [Uninstall](#uninstall)
 * [Todo List](#todo-list)
@@ -25,7 +26,7 @@ Notice that **the installation procedure and cmdlets shown below are required to
 
 Since low integrity applications are unable to access processes with high integrity privileges, normally the cursor of a window owned by processes with high privileges context cannot be hidden when running Fadeout under a restricted user.
 
-Users could start Fadeout by running a new PowerShell as Administrator to elevate the privileges everytime, but that's no an elegant choice.
+Users could start Fadeout by running a new PowerShell as Administrator to elevate the privileges everytime, but that's not an elegant choice.
 
 Fadeout solves this problem by registering a new scheduled task to activate Fadeout that runs with Administrator privileges at logon automatically, thus Administrator privileges must be granted to Fadeout Installer in the installation procedure and the mangement cmdlets.
 
@@ -51,6 +52,17 @@ $InstallPath = "C:\Fadeout"          # change the install path
 $Proxy = "http://127.0.0.1:1080"     # Only HTTP / HTTPS proxy is supported
 $ProxyCred = New-Object System.Management.Automation.PSCredential -ArgumentList "proxy-user", (ConvertTo-SecureString "p@ssw0rd" -AsPlainText -Force)
 IEX '$response = Invoke-WebRequest -Uri "https://raw.githubusercontent.com/soxfmr/Fadeout/master/Fadeout/FadeoutInstaller.psm1" -Proxy $Proxy -ProxyCredential $ProxyCred; $moduleBlock = [ScriptBlock]::Create($response.Content); New-Module -ScriptBlock $moduleBlock | Import-Module; Install-Fadeout -InstallPath $InstallPath -HttpProxy -ProxyCredential $ProxyCred'
+```
+
+### Using git
+
+```powershell
+cd C:\
+git clone https://github.com/soxfmr/Fadeout Fadeout
+cd Fadeout
+
+Import-Module .\Fadeout\Fadeout.psd1 -Force
+Install-FadeoutLocal -InstallPath $PWD.Path
 ```
 
 Run Fadeout

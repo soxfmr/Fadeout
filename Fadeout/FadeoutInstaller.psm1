@@ -336,16 +336,49 @@ function Protect-FadeoutInstalledFiles {
         $propagationFlags = 'None'
         $type             = 'Allow'
         $accessRuleArgumentList = $accessUsername, $fileSystemRights, $inheritanceFlags, $propagationFlags, $type
-        $accessRule = New-Object -TypeName System.Security.AccessContrddol.FileSystemAccessRule -ArgumentList $accessRuleArgumentList
+        $accessRule = New-Object -TypeName System.Security.AccessControl.FileSystemAccessRule -ArgumentList $accessRuleArgumentList
 
         $installPathAcl.SetAccessRule($accessRule)
 
-        Show-LoggingMessage -Message "Revoked the unsafe file permissions of user {$accessUsername}" -Level Success 
+        Show-LoggingMessage -Message "Revoked the unsafe file permissions from user {$accessUsername}" -Level Success 
     }
 
     Set-ACL -Path $installPath -AclObject $installPathAcl
 
     Show-LoggingMessage -Message "Checking the access control list of the installed files...OK." -Level Success 
+}
+
+Function Install-FadeoutLocal {
+    param(
+        [Parameter(Mandatory = $true)]
+        [string] $InstallPath
+    )
+
+    if (Test-Path -Path $InstallPath -PathType Leaf) {
+        throw "The install file path is already exist, please remove the existing file."
+    }
+
+    Show-LoggingMessage -Message "Fadeout will be installed into ${InstallPath}." -Level Info
+
+    # Check out the file's intergraty
+    Update-FadeoutInstallProgress -Status "Confirm-FadeoutInstalledFiles ->" -Operation "Verifing downloaded files"
+    Confirm-FadeoutInstalledFiles -URLFileMappings $_defaultFadeoutDownloadURLFileMappings -InstallPath $InstallPath
+
+    Update-FadeoutInstallProgress -Status "Protect-FadeoutInstalledFiles ->" -Operation "Checking the file permissions"
+    Protect-FadeoutInstalledFiles -InstallPath $InstallPath
+
+    Update-FadeoutInstallProgress -Status "Add-FadeoutScheduledTask ->" -Operation "Register the scheduled task"
+    Add-FadeoutScheduledTask -TaskName $_defaultFadeoutTaskName -TaskActionExec $_defaultFadeoutTaskActionExec -TaskActionArguments $_defaultFadeoutTaskActionArguments -WorkDirectory $InstallPath
+
+    Add-FadeoutModulePath -InstallPath $InstallPath
+
+    $lockFilePath = Join-Path $InstallPath -ChildPath $_defaultFadeoutLockFile
+    echo $null > $lockFilePath
+
+    Update-FadeoutInstallProgress -Completed
+
+    Show-LoggingMessage -Message "All done, please enjoying. :)" -Level Success
+    Show-LoggingMessage -Message "You can right now manage Fadeout by using Start-Fadeout / Stop-Fadeout ." -Level Success
 }
 
 <#
@@ -390,34 +423,10 @@ function Install-Fadeout {
     $_proxyAddress = $HttpProxy
     $_proxyCredential = $ProxyCredential
 
-    if (Test-Path -Path $InstallPath -PathType Leaf) {
-        throw "The install file path is already exist, please remove the existing file."
-    }
-
-    Show-LoggingMessage -Message "Fadeout will be installed into ${InstallPath}." -Level Info
-
     # Download Fadeout files
     Start-FadeoutDownloader -URLFileMappings $_defaultFadeoutDownloadURLFileMappings -OutputDir $InstallPath
 
-    # Check out the file's intergraty
-    Update-FadeoutInstallProgress -Status "Confirm-FadeoutInstalledFiles ->" -Operation "Verifing downloaded files"
-    Confirm-FadeoutInstalledFiles -URLFileMappings $_defaultFadeoutDownloadURLFileMappings -InstallPath $InstallPath
-
-    Update-FadeoutInstallProgress -Status "Protect-FadeoutInstalledFiles ->" -Operation "Checking the file permissions"
-    Protect-FadeoutInstalledFiles -InstallPath $InstallPath
-
-    Update-FadeoutInstallProgress -Status "Add-FadeoutScheduledTask ->" -Operation "Register the scheduled task"
-    Add-FadeoutScheduledTask -TaskName $_defaultFadeoutTaskName -TaskActionExec $_defaultFadeoutTaskActionExec -TaskActionArguments $_defaultFadeoutTaskActionArguments -WorkDirectory $InstallPath
-
-    Add-FadeoutModulePath -InstallPath $InstallPath
-
-    $lockFilePath = Join-Path $InstallPath -ChildPath $_defaultFadeoutLockFile
-    echo $null > $lockFilePath
-
-    Update-FadeoutInstallProgress -Completed
-
-    Show-LoggingMessage -Message "All done, please enjoying. :)" -Level Success
-    Show-LoggingMessage -Message "You can right now manage Fadeout by using Start-Fadeout / Stop-Fadeout ." -Level Success
+    Install-FadeoutLocal -InstallPath $InstallPath
 }
 
 function Uninstall-Fadeout {
@@ -451,5 +460,5 @@ function Uninstall-Fadeout {
     Show-LoggingMessage -Message "All done, see you next time. 2>" -Level Success
 }
 
-Export-ModuleMember -Function Install-Fadeout, Uninstall-Fadeout 
+Export-ModuleMember -Function Install-Fadeout, Uninstall-Fadeout, Install-FadeoutLocal
 

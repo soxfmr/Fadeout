@@ -69,7 +69,7 @@ Description = 'Hides the idle mouse cursor automatically.'
 NestedModules = @('Fadeout.psm1', 'FadeoutManagement.psm1', 'FadeoutInstaller.psm1')
 
 # Functions to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no functions to export.
-FunctionsToExport = @('Mount-Fadeout', 'Start-Fadeout', 'Stop-Fadeout', 'Install-Fadeout', 'Uninstall-Fadeout')
+FunctionsToExport = @('Mount-Fadeout', 'Start-Fadeout', 'Stop-Fadeout', 'Install-Fadeout', 'Uninstall-Fadeout', 'Install-FadeoutLocal')
 
 # Cmdlets to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no cmdlets to export.
 CmdletsToExport = @()
