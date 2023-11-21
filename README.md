@@ -34,7 +34,7 @@ Fadeout solves this problem by registering a new scheduled task to activate Fade
 
 ```powershell
 $InstallPath = "C:\Fadeout" # change the install path
-iex '$response = Invoke-WebRequest -Uri "https://raw.githubusercontent.com/soxfmr/Fadeout/master/Fadeout/FadeoutInstaller.psm1"; $moduleBlock = [ScriptBlock]::Create($response.Content); New-Module -ScriptBlock $moduleBlock | Import-Module; Install-Fadeout -InstallPath $InstallPath -HttpProxy $Proxy'
+iex '$response = Invoke-WebRequest -Uri "https://raw.githubusercontent.com/soxfmr/Fadeout/master/Fadeout/FadeoutInstaller.psm1"; $moduleBlock = [ScriptBlock]::Create($response.Content); New-Module -ScriptBlock $moduleBlock | Import-Module; Install-Fadeout -InstallPath $InstallPath'
 ```
 
 If your internal network requires proxy to access the Internet, you could specify the proxy address argument being used during the installation:
